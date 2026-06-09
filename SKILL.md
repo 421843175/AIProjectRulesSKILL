@@ -8,6 +8,7 @@ description: Enterprise workflow for complex code tasks. Use for non-trivial imp
 ## Contract
 
 - All user-facing replies, designs, plans, test reports, final summaries, review docs, and new code comments must be Chinese.
+- Mandatory: think and design with enterprise architecture discipline before coding: clear layers, module boundaries, responsibility separation, contracts, data flow, transaction/consistency, extensibility, compatibility, observability, security, maintainability, and minimal blast radius.
 - Keep execution concise; this skill is a checklist, not a policy essay.
 
 ## Use When
@@ -42,7 +43,7 @@ For complex tasks, do not edit business code until user confirms the Chinese des
 - Requirement: goal, I/O, edge cases, unknowns.
 - Current project state and constraints.
 - Tech/dependency choice: prefer existing stack; new deps need necessity, alternatives, maintenance, License, security, cost.
-- Architecture: layers, packages/modules, responsibilities, data flow, API contract, transaction, errors, extension, compatibility.
+- Enterprise architecture thinking: layers, packages/modules, responsibility boundaries, data flow, API contract, transaction/consistency, errors, extension points, compatibility, observability, security, maintainability, minimal blast radius.
 - Options + recommendation.
 - Acceptance criteria: normal/error paths, boundaries, performance, compatibility, visible success.
 - Confirmation points.
@@ -124,3 +125,5 @@ Final reply must include review doc path, or full Markdown content if no file wa
 Design: `项目现状`, `方案设计`, `评估维度`, `影响范围`, `推荐方案`, `验收标准`, `请确认`.
 
 Final: changed summary, key files, tests/reason, validation results, review doc path/content, remaining risks.
+
+
