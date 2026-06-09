@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enterprise Code Design"
+  short_description: "复杂编码任务的企业级架构设计、确认、实现与测试流程"
+  default_prompt: "Use $enterprise-code-design to design and implement a complex coding change with architecture review first."
