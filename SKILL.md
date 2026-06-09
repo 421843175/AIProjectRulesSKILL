@@ -8,7 +8,7 @@ description: Enterprise workflow for complex code tasks. Use for non-trivial imp
 ## Contract
 
 - All user-facing replies, designs, plans, test reports, final summaries, review docs, and new code comments must be Chinese.
-- Mandatory: think and design with enterprise architecture discipline before coding: clear layers, module boundaries, responsibility separation, contracts, data flow, transaction/consistency, extensibility, compatibility, observability, security, maintainability, and minimal blast radius.
+- Mandatory: think and design with enterprise architecture discipline before coding: clear layers, module boundaries, responsibility separation, contracts, data flow, transaction/consistency, extensibility, compatibility, observability, security, maintainability, minimal blast radius, and no over-engineering.
 - Keep execution concise; this skill is a checklist, not a policy essay.
 
 ## Use When
@@ -96,7 +96,7 @@ For multi-stage, DB migration, or multi-system work, create a Chinese implementa
 
 ### Organization
 
-Follow current architecture/package boundaries. Keep business logic out of entrypoints/controllers/scripts/UI. Split by local conventions: API/Controller, Service/Application, Domain, Repository/DAO, Infrastructure, DTO, Config, Constants, Tests. Add abstractions only for real complexity, extension, reuse, or local pattern. New APIs need compatibility, versioning, error codes, response shape, caller migration.
+Follow current architecture/package boundaries. Keep business logic out of entrypoints/controllers/scripts/UI. Split by local conventions: API/Controller, Service/Application, Domain, Repository/DAO, Infrastructure, DTO, Config, Constants, Tests. Avoid over-engineering. Add abstractions only for real complexity, extension, reuse, or local pattern. New APIs need compatibility, versioning, error codes, response shape, caller migration.
 
 ## Tests And Delivery
 
@@ -125,5 +125,6 @@ Final reply must include review doc path, or full Markdown content if no file wa
 Design: `项目现状`, `方案设计`, `评估维度`, `影响范围`, `推荐方案`, `验收标准`, `请确认`.
 
 Final: changed summary, key files, tests/reason, validation results, review doc path/content, remaining risks.
+
 
 
