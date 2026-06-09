@@ -43,7 +43,7 @@ For complex tasks, do not edit business code until user confirms the Chinese des
 - Requirement: goal, I/O, edge cases, unknowns.
 - Current project state and constraints.
 - Tech/dependency choice: prefer existing stack; new deps need necessity, alternatives, maintenance, License, security, cost.
-- Enterprise architecture thinking: layers, packages/modules, responsibility boundaries, data flow, API contract, transaction/consistency, errors, extension points, compatibility, observability, security, maintainability, minimal blast radius.
+- Enterprise architecture thinking: layers, packages/modules, responsibility boundaries, data flow, API contract, transaction/consistency, errors, extension points, compatibility/migration (if applicable), observability, security, maintainability, minimal blast radius
 - Options + recommendation.
 - Acceptance criteria: normal/error paths, boundaries, performance, compatibility, visible success.
 - Confirmation points.
