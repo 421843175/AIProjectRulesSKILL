@@ -114,7 +114,7 @@ DoD: design confirmed; code done; tests/test method provided; validation run; lo
 
 After testing, create a Chinese Markdown review doc in existing docs folder (`docs/`, `doc/`, `documentation/`, `设计文档/`). If none exists, ask before creating one or provide full Markdown in final reply with reason.
 
-Name: `yyyyMMdd（做了XXX）文档.md` or `yyyyMMdd（做了XXX）任务记录.md`; use completion/test date + short Chinese action. Examples: `20260609新增RTCM解码任务记录.md`, `20260609（新增RTCM解码）任务记录.md`, `20260609（修复订单回调幂等）文档.md`.
+Name: `WyyyyMMdd（做了XXX）文档.md` or `WyyyyMMdd（做了XXX）任务记录.md`; use completion/test date + short Chinese action. Examples: `W20260609新增RTCM解码任务记录.md`, `W20260609（新增RTCM解码）任务记录.md`, `W20260609（修复订单回调幂等）文档.md`.
 
 Include: background; discussion core; architecture inspection; design/options/evaluation/acceptance/blast radius; implementation flow/files/config or commit info; tests/data/expected/actual; how to inspect UI/API/logs/DB/test reports; strengths/gaps/risks/tech debt/maintenance boundary; rollback/troubleshooting.
 
