@@ -112,9 +112,9 @@ DoD: design confirmed; code done; tests/test method provided; validation run; lo
 
 ## Review Doc
 
-After testing, create a Chinese Markdown review doc in existing docs folder (`docs/`, `doc/`, `documentation/`, `设计文档/`). If none exists, ask before creating one or provide full Markdown in final reply with reason.
+After testing, create the Chinese Markdown review doc under `docs/work/`. If `docs/work/` does not exist, create it. Do not place work review docs directly under `docs/` or other doc folders unless the user explicitly requests a different path.
 
-Name: `WyyyyMMdd（做了XXX）文档.md` or `WyyyyMMdd（做了XXX）任务记录.md`; use completion/test date + short Chinese action. Examples: `W20260609新增RTCM解码任务记录.md`, `W20260609（新增RTCM解码）任务记录.md`, `W20260609（修复订单回调幂等）文档.md`.
+Name: `WyyyyMMdd（做了XXX）文档.md` or `WyyyyMMdd（做了XXX）任务记录.md`; `W` means `work`, used to mark work review records. Use completion/test date + short Chinese action. Examples: `W20260609新增RTCM解码任务记录.md`, `W20260609（新增RTCM解码）任务记录.md`, `W20260609（修复订单回调幂等）文档.md`.
 
 Include: background; discussion core; architecture inspection; design/options/evaluation/acceptance/blast radius; implementation flow/files/config or commit info; tests/data/expected/actual; how to inspect UI/API/logs/DB/test reports; strengths/gaps/risks/tech debt/maintenance boundary; rollback/troubleshooting.
 
@@ -125,6 +125,8 @@ Final reply must include review doc path, or full Markdown content if no file wa
 Design: `项目现状`, `方案设计`, `评估维度`, `影响范围`, `推荐方案`, `验收标准`, `请确认`.
 
 Final: changed summary, key files, tests/reason, validation results, review doc path/content, remaining risks.
+
+
 
 
 
