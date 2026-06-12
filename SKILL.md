@@ -1,6 +1,6 @@
 ---
 name: enterprise-code-design
-description: Enterprise workflow for complex code tasks. Use for non-trivial implementation, refactor, API/database/core-path/concurrency/performance/security changes, migrations, or architecture-sensitive work. Requires project inspection, Chinese design proposal, user confirmation before coding, minimal blast radius, no unrelated edits, Chinese comments, robust code, tests, validation, and a Chinese Markdown review document.
+description: Enterprise workflow for complex code tasks, also called ECD or the ECD skill. Use whenever the user explicitly says "ECD", "调用ECD", "调用ECD技能", "使用ECD", "使用ECD技能", "按ECD执行", "规范开发", or asks for enterprise-standard/规范化 development. Also use for non-trivial implementation, refactor, API/database/core-path/concurrency/performance/security changes, migrations, or architecture-sensitive work. Requires project inspection, Chinese design proposal, user confirmation before coding, minimal blast radius, no unrelated edits, Chinese comments, robust code, tests, validation, and a Chinese Markdown review document.
 ---
 
 # Enterprise Code Design
