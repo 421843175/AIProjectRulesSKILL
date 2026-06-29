@@ -99,11 +99,11 @@ Before documenting reuse, inspect whether the target is actually reusable:
 - Is there a stable entrypoint such as `index.js`, `index.ts`, package exports, API module, CLI entrypoint, script command, migration directory, Docker image, Helm chart, Terraform module, workflow file, template path, or documented artifact path?
 - Is there a validation path that proves the asset works in a fresh consumer project or an equivalent isolated environment?
 
-If the target is already reusable enough, do not interrupt the user with an approval question. Analyze the project and directly produce the reuse documentation.
+If the target is already reusable enough, do not interrupt the user with a refactor approval question. Analyze the project, identify the files/artifacts that will become reusable assets, apply the Reusable Asset Marking Gate below, then produce the reuse documentation.
 
 If the target is not reusable, only partially reusable, or has obvious reuse gaps, do not write the reuse documentation yet. Explain why it is not ready for reuse and state the concrete reusable refactoring requirements. When the user has asked to make it reusable, perform the required refactor after any ECD design-confirmation gate that applies.
 
-After refactoring, run feasible validation and stop before creating the reuse documentation. Summarize what changed, report validation results, explain any remaining risk, and ask the user to confirm that the refactored implementation is acceptable. Only after the user confirms the refactored result may the agent create the `[R]复用-XXXXX说明.md` artifact.
+After refactoring, run feasible validation and stop before asset marking or creating the reuse documentation. Summarize what changed, report validation results, explain any remaining risk, and ask the user to confirm that the refactored implementation is acceptable and approve adding it as a reusable asset. Only after the user confirms may the agent mark the confirmed files/artifacts as reusable assets and then create the `[R]复用-XXXXX说明.md` artifact.
 
 Typical reusable refactoring may include:
 
@@ -117,7 +117,7 @@ Typical reusable refactoring may include:
 - Adding explicit props, params, events, return contracts, config objects, adapters, schemas, CLI flags, API contracts, environment variables, infrastructure variables, or extension points.
 - Preserving backward compatibility wrappers when existing callers depend on old names.
 
-Only after the reusable boundary exists, validation has been run, and post-refactor user confirmation has been received should the agent create the `[R]复用-XXXXX说明.md` artifact. If no code/config/artifact changes were needed because the target was already reusable, this post-refactor confirmation gate is not required.
+Only after the reusable boundary exists, validation has been run, post-refactor user confirmation has been received when a refactor was required, and reusable asset marking has been applied should the agent create the `[R]复用-XXXXX说明.md` artifact. If no code/config/artifact changes were needed because the target was already reusable, this post-refactor confirmation gate is not required, but reusable asset marking is still required before documentation unless the asset is already marked.
 
 Decision flow:
 
@@ -125,14 +125,17 @@ Decision flow:
 Inspect target
   -> reusable enough
       -> analyze project
-      -> write reuse documentation directly
+      -> identify reusable asset files/artifacts
+      -> apply explicit reusable asset markers when missing
+      -> write reuse documentation
   -> not reusable / incomplete reuse boundary
       -> tell user the gaps and reusable refactoring requirements
       -> pass any required ECD design-confirmation gate before risky edits
       -> refactor into reusable assets/modules/tools/packages/templates/artifacts
       -> validate changed code/config/artifacts
-      -> stop and ask user to confirm the refactored result
-      -> user confirms
+      -> stop and ask user to confirm the refactored result and approve reusable asset marking
+      -> user confirms assetization
+          -> apply explicit reusable asset markers
           -> write reuse documentation
       -> user rejects or reports breakage
           -> fix or revise the refactor, validate again, then ask for confirmation again
@@ -140,7 +143,7 @@ Inspect target
 
 ## Post-Refactor Confirmation Gate
 
-When Reuse Mode changes code, configuration, scripts, schemas, infrastructure, templates, or any other project artifact to make it reusable, documentation must wait until the user confirms the refactored result.
+When Reuse Mode changes code, configuration, scripts, schemas, infrastructure, templates, or any other project artifact to make it reusable, documentation must wait until the user confirms the refactored result and approves adding the confirmed files/artifacts as reusable assets.
 
 The agent must provide before asking for confirmation:
 
@@ -150,9 +153,81 @@ The agent must provide before asking for confirmation:
 - Whether validation passed, failed, or was blocked.
 - Any remaining risks, behavior changes, or compatibility concerns.
 
-The confirmation question should be explicit, for example: "请确认当前可复用化改造后的功能是否符合预期；确认后我再生成复用说明文档。"
+The confirmation question should be explicit, for example: "请确认当前可复用化改造后的功能是否符合预期，并确认是否将这些文件加入 ECD 复用资产；确认后我会先添加 @reusable true 等资产标记，再生成复用说明文档。"
 
-Do not create the reuse documentation in the same step as a reusable refactor unless the user has already confirmed the refactored implementation after validation. This prevents documenting an implementation that may not run, may not match user expectations, or may still need another correction round.
+Do not add reusable asset markers or create the reuse documentation in the same step as a reusable refactor unless the user has already confirmed the refactored implementation after validation and approved assetization. This prevents documenting an implementation that may not run, may not match user expectations, or may still need another correction round.
+
+## Reusable Asset Marking Gate
+
+Before writing reuse documentation, all primary files that are being assetized must be explicitly marked. This is both explicit marking and context injection: future agents, reviewers, and developers must be able to open a reusable asset file and immediately see that it is shared, documented, and high blast-radius.
+
+Do not add reusable asset markers when the user only asks whether something can be reused. In that case, assess and report. Add markers only when the user asks to create/write reuse documentation, asks to package/share the asset, asks to make it a reusable asset, or confirms assetization after a refactor.
+
+For every comment-capable reusable source/config/template file, add an asset header at the top of the file using the file's native comment syntax. The header must include:
+
+- `@asset`
+- `@reusable true`
+- `@layer` with the asset layer, such as `Component / UI Asset`, `Domain / Service Asset`, `CLI / Tool Asset`, `Data / Migration Asset`, `Infrastructure / IaC Asset`, `Documentation / Template Asset`.
+- `@description` explaining the reusable asset in Chinese when the project-facing artifact is Chinese.
+- `@consumers` listing known consumers, projects, modules, pages, services, jobs, workflows, or `[]` if none are known yet.
+- `@reuseDoc` pointing to the future or existing `docs/reuse/[R]复用-XXXXX说明.md` path.
+- `@notice` warning that this is a reusable asset and that behavior, contract, config, validation, or limitation changes require updating the corresponding reuse document.
+
+Recommended JavaScript / TypeScript / Vue / Java / CSS-style header:
+
+```js
+/**
+ * @asset
+ * @file MyCustomSlider.vue
+ * @layer Component / UI Asset
+ * @description 【ECD 核心技术资产】全栈通用的高性能滑动条组件。
+ * @reusable true
+ * @consumers [商城客户端, 个人中心, H5活动页]
+ * @reuseDoc docs/reuse/[R]复用-高性能滑动条组件说明.md
+ * @notice 本文件已作为 ECD 复用资产归档。修改本文件的行为、契约、配置、样式、验证方式或限制时，必须同步更新 @reuseDoc 指向的复用说明文档，以确保复用可靠性。
+ */
+```
+
+Recommended Python / shell-style header:
+
+```python
+# @asset
+# @file import_users.py
+# @layer CLI / Tool Asset
+# @description 【ECD 核心技术资产】用户批量导入工具。
+# @reusable true
+# @consumers [运营后台, 数据初始化流程]
+# @reuseDoc docs/reuse/[R]复用-用户批量导入工具说明.md
+# @notice 本文件已作为 ECD 复用资产归档。修改本文件的行为、参数、输入输出、配置、验证方式或限制时，必须同步更新 @reuseDoc 指向的复用说明文档。
+```
+
+Recommended SQL / YAML / Terraform-style header:
+
+```sql
+-- @asset
+-- @file customer_tags.sql
+-- @layer Data / Migration Asset
+-- @description 【ECD 核心技术资产】客户标签迁移脚本。
+-- @reusable true
+-- @consumers [CRM服务, 数据仓库同步任务]
+-- @reuseDoc docs/reuse/[R]复用-客户标签迁移说明.md
+-- @notice 本文件已作为 ECD 复用资产归档。修改 schema、索引、默认数据、回滚方式或验证方式时，必须同步更新 @reuseDoc 指向的复用说明文档。
+```
+
+If a reusable asset is binary, generated, or uses a format that cannot safely carry comments, do not silently skip marking. Use one of these approaches and document it in the reuse guide:
+
+- Mark the nearest source wrapper, generator, template, package entrypoint, or module manifest that controls the asset.
+- Add an adjacent asset manifest such as `<asset-name>.asset.md` containing the same metadata fields.
+- If neither is possible, state that the asset cannot satisfy the explicit marking requirement and ask the user how to proceed before writing reuse documentation.
+
+When future ECD work reads a file containing `@reusable true`, it must:
+
+- Treat the file as a shared reusable asset with elevated blast radius.
+- Read the header and follow `@notice`.
+- Open the `@reuseDoc` file when it exists.
+- Identify known consumers from `@consumers` before editing.
+- Avoid breaking behavior, public contracts, configuration, input/output shape, validation paths, or documented limitations without explicit user confirmation.
+- Update the linked reuse document when the asset changes in a way that affects reuse.
 
 ## Required Reuse Boundaries
 
@@ -208,6 +283,7 @@ Use this Chinese structure unless the user gives a stricter one:
 > **文档生成时间**：YYYY-MM-DD HH:mm:ss
 > **复用对象**：说明被复用的组件、模块、工具、流程、模板、服务、脚本、数据资产、基础设施模块或其它开发资产名称
 > **来源项目/路径**：说明来源项目和关键源码/配置/模板/脚本/资产路径
+> **资产标记**：列出已加入 `@asset`、`@reusable true`、`@reuseDoc` 标识的关键文件或说明对应资产清单位置
 > **适用范围**：说明适合复用到哪些项目、系统、服务、流程、环境或场景
 > **维护说明**：说明后续修改、升级、验证、版本治理或注意事项
 
@@ -453,6 +529,7 @@ Before finishing Reuse Mode, confirm:
 - The reusable boundary exists in code/config/assets/templates/artifacts, or the missing boundary is explicitly documented.
 - The reuse guide is placed under `docs/reuse/` unless the user explicitly requested another location.
 - The reuse guide starts with metadata lines for generation time, reusable target, source path, applicable scope, and maintenance notes.
+- Primary reusable files are explicitly marked with `@asset`, `@reusable true`, `@reuseDoc`, `@consumers`, and `@notice`, or a documented asset manifest exists for formats that cannot safely carry comments.
 - The reuse guide includes file/directory/artifact reuse and package/artifact reuse when applicable.
 - If code/config/artifact changes were needed to create the reusable boundary, the user has confirmed the refactored result after validation before the reuse guide is written.
 - Each reuse method is executable, not aspirational.
