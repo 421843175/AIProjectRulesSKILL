@@ -101,9 +101,11 @@ Before documenting reuse, inspect whether the target is actually reusable:
 
 If the target is already reusable enough, do not interrupt the user with an approval question. Analyze the project and directly produce the reuse documentation.
 
-If the target is not reusable, only partially reusable, or has obvious reuse gaps, tell the user clearly before writing the reuse documentation. Explain why it is not ready for reuse and propose concrete changes. Continue with reusable refactoring only when the user confirms they want to proceed.
+If the target is not reusable, only partially reusable, or has obvious reuse gaps, do not write the reuse documentation yet. Explain why it is not ready for reuse and state the concrete reusable refactoring requirements. When the user has asked to make it reusable, perform the required refactor after any ECD design-confirmation gate that applies.
 
-After the user confirms, make the current project reusable first, then write the reuse documentation. Typical reusable refactoring may include:
+After refactoring, run feasible validation and stop before creating the reuse documentation. Summarize what changed, report validation results, explain any remaining risk, and ask the user to confirm that the refactored implementation is acceptable. Only after the user confirms the refactored result may the agent create the `[R]复用-XXXXX说明.md` artifact.
+
+Typical reusable refactoring may include:
 
 - Extracting page-specific, service-specific, job-specific, deployment-specific, or dataset-specific logic into reusable modules.
 - Moving provider/service definitions into configuration modules.
@@ -115,7 +117,7 @@ After the user confirms, make the current project reusable first, then write the
 - Adding explicit props, params, events, return contracts, config objects, adapters, schemas, CLI flags, API contracts, environment variables, infrastructure variables, or extension points.
 - Preserving backward compatibility wrappers when existing callers depend on old names.
 
-Only after the reusable boundary exists should the agent create the `[R]复用-XXXXX说明.md` artifact.
+Only after the reusable boundary exists, validation has been run, and post-refactor user confirmation has been received should the agent create the `[R]复用-XXXXX说明.md` artifact. If no code/config/artifact changes were needed because the target was already reusable, this post-refactor confirmation gate is not required.
 
 Decision flow:
 
@@ -125,13 +127,32 @@ Inspect target
       -> analyze project
       -> write reuse documentation directly
   -> not reusable / incomplete reuse boundary
-      -> tell user the gaps
-      -> propose concrete reusable refactor
-      -> wait for user confirmation
+      -> tell user the gaps and reusable refactoring requirements
+      -> pass any required ECD design-confirmation gate before risky edits
       -> refactor into reusable assets/modules/tools/packages/templates/artifacts
-      -> validate
-      -> write reuse documentation
+      -> validate changed code/config/artifacts
+      -> stop and ask user to confirm the refactored result
+      -> user confirms
+          -> write reuse documentation
+      -> user rejects or reports breakage
+          -> fix or revise the refactor, validate again, then ask for confirmation again
 ```
+
+## Post-Refactor Confirmation Gate
+
+When Reuse Mode changes code, configuration, scripts, schemas, infrastructure, templates, or any other project artifact to make it reusable, documentation must wait until the user confirms the refactored result.
+
+The agent must provide before asking for confirmation:
+
+- What was changed to create the reusable boundary.
+- Which files, directories, packages, commands, configs, schemas, migrations, deployment assets, or templates changed.
+- Which validation commands or manual checks were run.
+- Whether validation passed, failed, or was blocked.
+- Any remaining risks, behavior changes, or compatibility concerns.
+
+The confirmation question should be explicit, for example: "请确认当前可复用化改造后的功能是否符合预期；确认后我再生成复用说明文档。"
+
+Do not create the reuse documentation in the same step as a reusable refactor unless the user has already confirmed the refactored implementation after validation. This prevents documenting an implementation that may not run, may not match user expectations, or may still need another correction round.
 
 ## Required Reuse Boundaries
 
@@ -433,6 +454,7 @@ Before finishing Reuse Mode, confirm:
 - The reuse guide is placed under `docs/reuse/` unless the user explicitly requested another location.
 - The reuse guide starts with metadata lines for generation time, reusable target, source path, applicable scope, and maintenance notes.
 - The reuse guide includes file/directory/artifact reuse and package/artifact reuse when applicable.
+- If code/config/artifact changes were needed to create the reusable boundary, the user has confirmed the refactored result after validation before the reuse guide is written.
 - Each reuse method is executable, not aspirational.
 - Required reusable file sets, dependencies, resource entrypoints, config, import/call/execute/deploy paths, invocation code or command, input contract, output handling, runtime/deployment requirements, permissions/secrets, and verification steps are listed.
 - Secrets are injected through configuration or secret management, not hard-coded.
@@ -449,3 +471,4 @@ In the final response, include:
 - The ECD work/review record path if ECD delivery rules require one.
 - Validation commands and results.
 - Remaining limitations.
+
